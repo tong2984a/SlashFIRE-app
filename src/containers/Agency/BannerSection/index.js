@@ -4,6 +4,7 @@ import Box from 'common/components/Box';
 import Button from 'common/components/Button';
 import Image from 'common/components/Image';
 import Link from 'common/components/Link';
+import GlideCarousel from 'common/components/GlideCarousel';
 import Container from 'common/components/UI/Container';
 import BannerWrapper from './bannerSection.style';
 import Text from 'common/components/Text';
@@ -18,6 +19,10 @@ import Heart from 'common/assets/image/agency/heart.png';
 import PriceImg from 'common/assets/image/agency/logos_ethereum.png';
 import EzGif from 'common/assets/image/agency/ezgif.png';
 
+import { ethers } from 'ethers'
+import { useEffect, useState, createContext, useContext, useRef} from "react"
+import { UserContext } from '../../../pages/index'
+
 const BannerSection = ({
   row,
   col,
@@ -26,7 +31,19 @@ const BannerSection = ({
   title,
   btnStyle,
   description,
+  handleAccountsRequest,
+  handleMint
 }) => {
+  const {contractsState, messageState, nftsState, addressState} = useContext(UserContext)
+  const [message, setMessage] = messageState
+  const [nfts, setNfts] = nftsState
+  const [address, setAddress] = addressState
+  var currentNftIndex = 0
+
+  function handleRun(index) {
+    currentNftIndex = index
+  }
+
   return (
     <BannerWrapper>
       <Container fullWidth={true}>
@@ -40,9 +57,9 @@ const BannerSection = ({
             <Text {...description} mb="120px" content={"Join us to make the biggest gaming guild in the world!"}></Text>
             <Box width={"75%"} marginRight={"auto"} marginLeft={"auto"} marginBottom={"48px"} flexBox={true}>
               <Box className="contact-address_wrapper">
-                <input type="text" placeholder="HoxmanTPNU5ELC88TeoASjUpxkiD8yboLfUXh9xUWJQe"/>
+                <input type="text" placeholder={address}/>
               </Box>
-              <Button variant="textButton"
+              <Button variant="textButton" onClick={handleAccountsRequest}
                title={"Your Address"} {...btnStyle}></Button>
             </Box>
             <aside className="social-media_group">
@@ -65,37 +82,58 @@ const BannerSection = ({
                 <Link href="#"><Image src={Twitter?.src} alt="Twitter icon"/></Link>
               </Box>
             </aside>
-            <Text {...description}  mb="60px" content={"Solana wallet adapter is connected and ready to use."}></Text>
-            <Box marginBottom="65px" flexBox={true} justifyContent="center">
-              <Heading as="h3" {...title} content="Templates"></Heading>
-              <Box width="60px" height="60px" className="yellow_circle"></Box>
-            </Box>
+            <Text {...description}  mb="60px" content={message}></Text>
             <Box marginRight="auto" marginLeft="auto" width={"80%"}>
               <Box className="row" {...row}>
                 <Box as="article" {...col3} className="col membership_card">
-                  <Image className="membership_img" src={EzGif?.src} alt="membership image"/>
-                  <Box className="membership_info">
-                    <Box className="membership_header">
-                      <Heading as="h2" content="MAZIL.FIRE.NFT"></Heading>
-                      <Text content="Drey Aiko"></Text>
-                    </Box>
-                    <Box className="membership_price_header">
-                      <Heading as="h2" content="Price"></Heading>
-                      <Box className="price_img-wrapper" flexBox={true} alignItems="center">
-                        <Image className="price-img" src={PriceImg?.src} alt="price icon"/>
-                        <Text content="3.4999"></Text>
+                  <GlideCarousel
+                    handleRun={handleRun}
+                    nextButton={
+                      <Button
+                        icon={<i className="flaticon-next" />}
+                        aria-label="Next"
+                        variant="textButton"
+                        {...BannerSection.defaultProps.glideBtnStyle}
+                      />
+                    }
+                    prevButton={
+                      <Button
+                        icon={<i className="flaticon-left-arrow" />}
+                        aria-label="Prev"
+                        variant="textButton"
+                        {...BannerSection.defaultProps.glideBtnStyle}
+                      />
+                    }>
+                  <>
+                  {nfts.map((nft, i) => (
+                    <div key={i}>
+                      <Image className="membership_img" src={EzGif?.src} alt="membership image"/>
+                      <Box className="membership_info">
+                        <Box className="membership_header">
+                          <Heading as="h2" content={nft.symbol}></Heading>
+                          <Text content={`No. ${nft.itemId}`}></Text>
+                        </Box>
+                        <Box className="membership_price_header">
+                          <Heading as="h2" content="Price"></Heading>
+                          <Box className="price_img-wrapper" flexBox={true} alignItems="center">
+                            <Image className="price-img" src={PriceImg?.src} alt="price icon"/>
+                            <Text content={nft.bidPrice.toString()}></Text>
+                          </Box>
+                        </Box>
                       </Box>
-                    </Box>
-                  </Box>
-                  <Link href="#add_like" className="membership_likes_info">
-                    <Image className="heart-img" src={Heart?.src} alt="heart icon"/>
-                    <Text content="45"></Text>
-                  </Link>
+                      <Link href="#add_like" className="membership_likes_info">
+                        <Image className="heart-img" src={Heart?.src} alt="heart icon"/>
+                        <Text content="45"></Text>
+                      </Link>
+                    </div>
+                  ))}
+                  </>
+                  </GlideCarousel>
                 </Box>
                 <Box {...col2} className="col membership_nft-info">
                   <Heading as="h1" content="Membership NFT"></Heading>
                   <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
-                  <Button title="Buy Now" {...btnStyle}>Buy Now</Button>
+                  <Button title="Buy Now" {...btnStyle} onClick={() => handleMint(nfts[currentNftIndex])}>Buy Now</Button>
                 </Box>
                 <Box className="slash_fire-brief">
                  <Heading content="What’s SlashFIRE?" as="h2"></Heading>
@@ -121,6 +159,14 @@ BannerSection.propTypes = {
 };
 
 BannerSection.defaultProps = {
+  // next / prev btn style
+  glideBtnStyle: {
+    minWidth: 'auto',
+    minHeight: 'auto',
+    mr: '13px',
+    fontSize: '16px',
+    color: '#EA4543',
+  },
   row: {
     flexBox: true,
     flexWrap: 'wrap',
@@ -143,7 +189,7 @@ BannerSection.defaultProps = {
     fontFamily: 'Abril Fatface',
     fontSize: ['26px', '34px', '42px', '52px'],
     fontWeight: '300',
-    color: '#FF9E00',
+    color: '#EA4543',
     letterSpacing: '-0.025em',
     mb: '0px',
     lineHeight: '62px',
@@ -158,11 +204,12 @@ BannerSection.defaultProps = {
   },
   btnStyle: {
     borderRadius: '0 10px 10px 0px',
-    border: '1px solid #ff9e00',
+    border: '1px solid #EA4543',
     padding: '10px 60px',
     widht: '222px',
     color: '#000',
-    backgroundColor: '#FF9E00',
+    backgroundColor: '#EA4543',
+//    backgroundColor: '#EA4543',
     fontSize: '16px',
     lineHeight: '24px',
     fontFamily: 'Poppins'

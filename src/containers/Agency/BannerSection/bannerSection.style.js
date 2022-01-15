@@ -20,7 +20,7 @@ const BannerWrapper = styled.section`
         width: 90%;
         padding: 19px 0 17px 27px;
         background: #110620;
-        border: 1px solid #FF9E00;
+        border: 1px solid #EA4543;
         border-radius: 10px 0px 0px 10px;
 
         button {
@@ -93,7 +93,7 @@ const BannerWrapper = styled.section`
             font-size: 13px;
             line-height: 20px;
           }
-          
+
           .membership_price_header {
             margin: 0 0 0 auto;
 
@@ -124,6 +124,23 @@ const BannerWrapper = styled.section`
             color: #fff;
             line-height: 18px;
           }
+          .membership_buy_btn {
+            display: flex;
+            position: relative;
+            align-items: right;
+            justify-content: flex-end;
+
+            img {
+              display: inline-block;
+              margin-right: 18px;
+            }
+            p {
+              margin-bottom: 0;
+              font-family: 'Poppins';
+              font-size: 12px;
+              color: #fff;
+              line-height: 18px;
+            }
         }
       }
     }
@@ -154,7 +171,7 @@ const BannerWrapper = styled.section`
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid #FF9E00;
+        border: 2px solid #EA4543;
         background: transparent;
       }
     }

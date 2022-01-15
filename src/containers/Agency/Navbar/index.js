@@ -18,6 +18,9 @@ import { DrawerContext } from 'common/contexts/DrawerContext';
 
 import data from 'common/data/Agency/';
 
+import { useState, createContext} from "react"
+import { UserContext } from '../../../pages/index'
+
 // Default close button for modal
 const CloseModalButton = () => (
   <Button
@@ -38,8 +41,13 @@ const CloseModalButtonAlt = () => (
   />
 );
 
-const Navbar = ({ navbarStyle, logoStyle, btnStyle }) => {
+const Navbar = ({ navbarStyle, logoStyle, btnStyle, handleWalletRequestPermissions }) => {
   const { state, dispatch } = useContext(DrawerContext);
+
+  const {messageState, nftsState, addressState} = useContext(UserContext)
+  const [message, setMessage] = messageState
+  const [nfts, setNfts] = nftsState
+  const [address, setAddress] = addressState
 
   // Search modal handler
   const handleSearchModal = () => {
@@ -108,6 +116,7 @@ const Navbar = ({ navbarStyle, logoStyle, btnStyle }) => {
             variant="textButton"
             title={"Select Wallet"}
             {...btnStyle}
+            onClick={handleWalletRequestPermissions}
           />
         </div>
       </Container>
@@ -129,9 +138,9 @@ Navbar.defaultProps = {
   },
   btnStyle: {
     borderRadius: '18px',
-    border: '1px solid #ff9e00',
+    border: '1px solid #EA4543',
     padding: '10px 30px',
-    color: '#ff9e00',
+    color: '#EA4543',
     fontSize: '16px',
     lineHeight: '24px',
     fontFamily: 'Poppins'

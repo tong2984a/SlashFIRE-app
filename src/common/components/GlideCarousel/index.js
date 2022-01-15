@@ -26,6 +26,7 @@ const GlideCarousel = ({
   bulletWrapperStyle,
   bulletButtonStyle,
   carouselSelector,
+  handleRun
 }) => {
   // Add all classs to an array
   const addAllClasses = ['glide'];
@@ -49,6 +50,9 @@ const GlideCarousel = ({
         ...options,
       }
     );
+    glide.on('run', function(arg) {
+      handleRun(glide.index)
+    })
     glide.mount();
   });
 

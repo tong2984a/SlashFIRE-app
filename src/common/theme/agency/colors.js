@@ -19,7 +19,7 @@ const colors = {
   quoteText: '#343d48',
   textColor: 'rgba(52, 61, 72, 0.8)',
   linkColor: '#2b9eff',
-  ternary: '#FF9E00',
+  ternary: '#EA4543',
   stickyColor: 'rgba(17, 17, 24, 0.57)'
 };
 
