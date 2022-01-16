@@ -19,6 +19,7 @@
     "@redq/reuse-modal": "^1.1.9",
     "@styled-system/theme-get": "^5.1.2",
     "animate.css": "^4.1.1",
+    "ethers": "^5.5.3",
     "firebase-admin": "^9.6.0",
     "firebase-functions": "^3.13.2",
     "next": "^11.1.2",
