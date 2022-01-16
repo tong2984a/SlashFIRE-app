@@ -1,16 +1,18 @@
 # Steps to run webapp
-     $ git clone git@github.com:z1bc-io/SlashFIRE.git SlashFIRE
 
-     $ cd SlashFIRE
+### In a first terminal
+    $ git clone git@github.com:z1bc-io/SlashFIRE.git SlashFIRE
 
-     $ node --version
-     > v16.10.0
+    $ cd SlashFIRE
 
-     $ yarn --version
-     > 1.22.0
+    $ node --version
+    > v16.10.0
 
-     $ yarn
+    $ yarn --version
+    > 1.22.0
 
-     $ npm run dev
+    $ yarn
 
-     lastly, point your browser to http://localhost:3000
+    $ npm run dev
+
+    lastly, point your browser to http://localhost:3000
