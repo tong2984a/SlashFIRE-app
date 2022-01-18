@@ -119,7 +119,7 @@ const Main = () => {
   }, [])
 
   async function handleMint(nft) {
-    if (nft.tokenId === '-') {
+    if (!nft || nft.tokenId === '-') {
       return updateInfo({message: "Unable to connect to network. Please check MetaMask and try again."})
     }
     if (window.ethereum) {
