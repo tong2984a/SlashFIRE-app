@@ -33,8 +33,8 @@ const BannerSection = ({
   handleAccountsRequest,
   handleMint
 }) => {
-  const {contractsState, messageState, nftsState, addressState} = useContext(UserContext)
-  const [message, updateMessage] = messageState
+  const {contractsState, infoState, nftsState, addressState} = useContext(UserContext)
+  const [info, updateInfo] = infoState
   const [nfts, setNfts] = nftsState
   const [address, setAddress] = addressState
   var currentNftIndex = 0
@@ -81,8 +81,8 @@ const BannerSection = ({
                 <Link href="#"><Image src={Twitter?.src} alt="Twitter icon"/></Link>
               </Box>
             </aside>
-            <Text {...description}  mb="60px" content={message.title}></Text>
-            <Text {...description}  mb="60px" content={message.message}></Text>
+            <Text {...description}  mb="60px" content={info.title}></Text>
+            <Text {...description}  mb="60px" content={info.message}></Text>
             <Box marginRight="auto" marginLeft="auto" width={"80%"}>
               <Box className="row" {...row}>
                 <Box as="article" {...col3} className="col membership_card">

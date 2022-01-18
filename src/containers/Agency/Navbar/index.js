@@ -18,9 +18,6 @@ import { DrawerContext } from 'common/contexts/DrawerContext';
 
 import data from 'common/data/Agency/';
 
-import { useState, createContext} from "react"
-import { UserContext } from '../../../pages/index'
-
 // Default close button for modal
 const CloseModalButton = () => (
   <Button
