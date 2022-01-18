@@ -22,12 +22,17 @@ import FaqSection from 'containers/Agency/FaqSection';
 
 import { ethers } from 'ethers'
 import { useEffect, useState, createContext } from 'react'
-import {
-  nftaddress, nftmarketaddress, envChainName, envChainId, contract_owner
-} from '../config'
+//import {
+//  nftaddress, nftmarketaddress, envChainName, envChainId, contract_owner
+//} from '../config.json'
+
+import config from '../config.json'
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
-
+const nftaddress = config['deployed']['nftaddress']
+const nftmarketaddress = config['deployed']['nftmarketaddress']
+const envChainName = config['deployed']['envChain']['name']
+const envChainId = config['deployed']['envChain']['id']
 export const UserContext = createContext()
 
 const Main = () => {
