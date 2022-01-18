@@ -33,7 +33,7 @@ export const UserContext = createContext()
 const Main = () => {
   const [nfts, setNfts] = useState([])
   const [address, setAddress] = useState('')
-  const [message, updateMessage] = useState({ title: '', content: '' })
+  const [message, updateMessage] = useState({ title: '', message: '' })
   const [contracts, setContracts] = useState([])
 
   async function loadNfts(nft, market, envChainId) {
@@ -74,9 +74,9 @@ const Main = () => {
       }
     } catch (error) {
       if (error.data) {
-        updateMessage({content: `Crypto Wallet Error: ${error.data.message}`})
+        updateMessage({message: `Crypto Wallet Error: ${error.data.message}`})
       } else {
-        updateMessage({content: `Crypto Wallet Error: ${error.message || error}`})
+        updateMessage({message: `Crypto Wallet Error: ${error.message || error}`})
       }
     }
   }
@@ -99,7 +99,7 @@ const Main = () => {
 
       loadNfts(nft, market, envChainId)
     } else {
-      updateMessage({title: 'Error - Non-Ethereum browser detected.', content: 'You should consider installing MetaMask'})
+      updateMessage({title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
     }
     return function cleanup() {
       //mounted = false
@@ -108,10 +108,10 @@ const Main = () => {
 
   async function handleMint(nft) {
     if (nft.tokenId === '-') {
-      return updateMessage({content: "Unable to connect to network. Please check MetaMask and try again."})
+      return updateMessage({message: "Unable to connect to network. Please check MetaMask and try again."})
     }
     if (window.ethereum) {
-      updateMessage({content: "Please wait. Smart contract is processing."})
+      updateMessage({message: "Please wait. Smart contract is processing."})
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
@@ -119,16 +119,16 @@ const Main = () => {
         let biddingPrice = ethers.utils.parseUnits(nft.bidPrice.toString(), 'ether')
         let transaction = await market.createMarketSale(nft.nftContract, nft.itemId, {value: biddingPrice})
         let tx = await transaction.wait()
-        updateMessage({content: ''})
+        updateMessage({message: ''})
       } catch (error) {
         if (error.data) {
-          updateMessage({content:`Crypto Wallet Error: ${error.data.message}`})
+          updateMessage({message:`Crypto Wallet Error: ${error.data.message}`})
         } else {
-          updateMessage({content:`Crypto Wallet Error: ${error.message || error}`})
+          updateMessage({message:`Crypto Wallet Error: ${error.message || error}`})
         }
       }
     } else {
-      updateMessage({title: 'Error - Non-Ethereum browser detected.', content: 'You should consider installing MetaMask'})
+      updateMessage({title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
     }
   }
 
@@ -137,7 +137,7 @@ const Main = () => {
       await ethWalletRequestPermissions()
       //do not rethrow because Brave wallet does not yet support wallet_requestPermissions
     } catch(error) {
-      updateMessage({content: error.message})
+      updateMessage({message: error.message})
     }
   }
 
@@ -145,7 +145,7 @@ const Main = () => {
     try {
       await ethAccountsRequest()
     } catch(error) {
-      updateMessage({content: error.message})
+      updateMessage({message: error.message})
     }
   }
 
@@ -157,27 +157,27 @@ const Main = () => {
       ]).catch((error) => {
         console.error(error)
         if (error.code === 4001) {
-          throw {title: 'Error - Please check your wallet and try again', content: 'Connection request has been rejected. '}
+          throw {title: 'Error - Please check your wallet and try again', message: 'Connection request has been rejected. '}
         } else if (error.code === -32002) {
-          throw {title: 'Error - Please check your wallet and try again', content: error.message}
+          throw {title: 'Error - Please check your wallet and try again', message: error.message}
         } else {
-          throw {title: 'Error - Please check your wallet and try again', content: error.message}
+          throw {title: 'Error - Please check your wallet and try again', message: error.message}
         }
       })
       if (result) {
         console.log(result)
         let [accounts, chainId] = result
         if (accounts.length === 0) {
-          throw {title: 'Error - Please check your wallet and try again', content: `MetaMask is locked or the user has not connected any accounts`}
+          throw {title: 'Error - Please check your wallet and try again', message: `MetaMask is locked or the user has not connected any accounts`}
         }
         if (chainId !== envChainId) {
-          throw {title: 'Error - Please check your wallet and try again', content: `Error - Is your wallet connected to ${envChainName}?`}
+          throw {title: 'Error - Please check your wallet and try again', message: `Error - Is your wallet connected to ${envChainName}?`}
         }
         setAddress(accounts[0])
-        updateMessage({content: "Metamask wallet adapter is connected and ready to use."})
+        updateMessage({message: "Metamask wallet adapter is connected and ready to use."})
       }
     } else {
-      throw {title: 'Error - Non-Ethereum browser detected.', content: 'You should consider installing MetaMask'}
+      throw {title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'}
     }
   }
 
@@ -196,21 +196,21 @@ const Main = () => {
           (permission) => permission.parentCapability === 'eth_accounts'
         )
         if (accountsPermission) {
-          updateMessage({content: 'eth_accounts permission successfully requested!'})
+          updateMessage({message: 'eth_accounts permission successfully requested!'})
         }
       } catch(error) {
         if (error.code === 4001) {
-          throw {title: 'Error - Please check your wallet and try again', content: 'Connection request has been rejected. '}
+          throw {title: 'Error - Please check your wallet and try again', message: 'Connection request has been rejected. '}
         } else if (error.code === -32601) {
-          throw {title: 'Error - Please check your wallet and try again', content: 'Permissions needed to continue.'}
+          throw {title: 'Error - Please check your wallet and try again', message: 'Permissions needed to continue.'}
         } else if (error.code === -32002) {
-          throw {title: 'Error - Please check your wallet and try again', content: error.message}
+          throw {title: 'Error - Please check your wallet and try again', message: error.message}
         } else {
-          throw {title: 'Error - Please check your wallet and try again', content: error.message}
+          throw {title: 'Error - Please check your wallet and try again', message: error.message}
         }
       }
     } else {
-      throw {title: 'Error - Non-Ethereum browser detected.', content: 'You should consider installing MetaMask'}
+      throw {title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'}
     }
   }
 

@@ -44,11 +44,6 @@ const CloseModalButtonAlt = () => (
 const Navbar = ({ navbarStyle, logoStyle, btnStyle, handleWalletRequestPermissions }) => {
   const { state, dispatch } = useContext(DrawerContext);
 
-  const {messageState, nftsState, addressState} = useContext(UserContext)
-  const [message, setMessage] = messageState
-  const [nfts, setNfts] = nftsState
-  const [address, setAddress] = addressState
-
   // Search modal handler
   const handleSearchModal = () => {
     openModal({

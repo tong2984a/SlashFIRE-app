@@ -82,7 +82,7 @@ const BannerSection = ({
               </Box>
             </aside>
             <Text {...description}  mb="60px" content={message.title}></Text>
-            <Text {...description}  mb="60px" content={message.content}></Text>
+            <Text {...description}  mb="60px" content={message.message}></Text>
             <Box marginRight="auto" marginLeft="auto" width={"80%"}>
               <Box className="row" {...row}>
                 <Box as="article" {...col3} className="col membership_card">
