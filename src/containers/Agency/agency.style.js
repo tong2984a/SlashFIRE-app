@@ -22,6 +22,11 @@ const GlobalStyle = createGlobalStyle`
   h6 {
     font-family: 'Roboto', sans-serif;
   }
+
+  @font-face {
+    font-family: 'Himagsikan';
+    src: url("/fonts/himagsikan.otf") format("truetype");
+  }
   section {
     position: relative;
   }
@@ -203,6 +208,10 @@ const AgencyWrapper = styled.div`
       color: ${themeGet('colors.ternary')};
       font-size: 16px;
     }
+
+    .reusecore__button.dark-red-variant {
+      color: #EA4543;
+    }
     .hamburgMenu__bar {
       margin-left: 8px;
       > span {
@@ -220,6 +229,9 @@ const AgencyWrapper = styled.div`
       padding: 15px auto;
       .reusecore__button {
         color: ${themeGet('colors.ternary')};
+      }
+      .reusecore__button.dark-red-variant {
+        color: #EA4543;
       }
       .hamburgMenu__bar > span {
         background-color: ${themeGet('colors.primary', '#10ac84')};

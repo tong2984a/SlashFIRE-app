@@ -12,7 +12,8 @@ import SearchPanel from '../SearchPanel';
 import LoginModal from '../LoginModal';
 import CopyrightSection from '../CopyrightsSection';
 
-import LogoImage from 'common/assets/image/agency/logo.png';
+import LogoImage from 'common/assets/image/agencyDigital/logo-v2.png';
+import BtnImage from 'common/assets/image/agencyDigital/btn-img.png';
 
 import { DrawerContext } from 'common/contexts/DrawerContext';
 
@@ -38,7 +39,7 @@ const CloseModalButtonAlt = () => (
   />
 );
 
-const Navbar = ({ navbarStyle, logoStyle, btnStyle, handleWalletRequestPermissions }) => {
+const Navbar = ({ navbarStyle, logoStyle, btnStyle, handleWalletRequestPermissions, handleRegister }) => {
   const { state, dispatch } = useContext(DrawerContext);
 
   // Search modal handler
@@ -99,16 +100,18 @@ const Navbar = ({ navbarStyle, logoStyle, btnStyle, handleWalletRequestPermissio
       <Container fullWidth={true}>
         <Logo
           href="#"
+          title=''
           logoSrc={LogoImage}
-          title="SlashFIRE"
           logoStyle={logoStyle}
         />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
+            className={"dark-red-variant"}
+            iconPosition={"left"}
             variant="textButton"
-            title={"Select Wallet"}
+            title={"SlashFIRE"}
+            onClick={handleRegister}
             {...btnStyle}
-            onClick={handleWalletRequestPermissions}
           />
         </div>
       </Container>
@@ -131,7 +134,7 @@ Navbar.defaultProps = {
   btnStyle: {
     borderRadius: '18px',
     border: '1px solid #EA4543',
-    padding: '10px 30px',
+    padding: '10px 20px',
     color: '#EA4543',
     fontSize: '16px',
     lineHeight: '24px',
@@ -139,7 +142,7 @@ Navbar.defaultProps = {
   },
   // Default logo size
   logoStyle: {
-    width: '60px',
+    width: '160px',
     height: 'auto',
   },
 };

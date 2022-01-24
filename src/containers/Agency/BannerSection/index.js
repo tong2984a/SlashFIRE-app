@@ -9,15 +9,18 @@ import Container from 'common/components/UI/Container';
 import BannerWrapper from './bannerSection.style';
 import Text from 'common/components/Text';
 import Heading from 'common/components/Heading';
-import Youtube from 'common/assets/image/agency/youtube.png';
-import Discord from 'common/assets/image/agency/discord.png';
-import Facebook from 'common/assets/image/agency/facebook.png';
-import Instagram from 'common/assets/image/agency/instagram.png';
-import Telegram from 'common/assets/image/agency/telegram.png';
-import Twitter from 'common/assets/image/agency/twitter.png';
+
+import Youtube from 'common/assets/image/agencyDigital/youtube.png';
+import Discord from 'common/assets/image/agencyDigital/discord.png';
+import Facebook from 'common/assets/image/agencyDigital/facebook.png';
+import Instagram from 'common/assets/image/agencyDigital/instagram.png';
+import Telegram from 'common/assets/image/agencyDigital/telegram.png';
+import Twitter from 'common/assets/image/agencyDigital/twitter.png';
+
 import Heart from 'common/assets/image/agency/heart.png';
 import PriceImg from 'common/assets/image/agency/logos_ethereum.png';
 import EzGif from 'common/assets/image/agency/ezgif.png';
+import Coin from 'common/assets/image/Coin_FRONT_black.png'
 
 import { useEffect, useState, createContext, useContext, useRef} from "react"
 import { UserContext } from '../../../pages/index'
@@ -59,7 +62,7 @@ const BannerSection = ({
                 <input type="text" placeholder={address}/>
               </Box>
               <Button variant="textButton" onClick={handleAccountsRequest}
-               title={"Your Address"} {...btnStyle}></Button>
+               title={"Connect Wallet"} {...btnStyle}></Button>
             </Box>
             <aside className="social-media_group">
               <Box marginBottom="5px" width="50px" height="50px" className="yellow_circle">
@@ -107,7 +110,7 @@ const BannerSection = ({
                   <>
                   {nfts.map((nft, i) => (
                     <div key={i}>
-                      <Image className="membership_img" src={EzGif?.src} alt="membership image"/>
+                      <Image className="membership_img" src={Coin?.src} alt="membership image"/>
                       <Box className="membership_info">
                         <Box className="membership_header">
                           <Heading as="h2" content={nft.symbol}></Heading>

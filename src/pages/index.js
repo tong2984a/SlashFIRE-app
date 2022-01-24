@@ -20,15 +20,14 @@ import Footer from 'containers/Agency/Footer';
 import { DrawerProvider } from 'common/contexts/DrawerContext';
 import FaqSection from 'containers/Agency/FaqSection';
 
+import Coin from 'common/assets/image/Coin_FRONT_black.png'
 import { ethers } from 'ethers'
 import { useEffect, useState, createContext } from 'react'
-//import {
-//  nftaddress, nftmarketaddress, envChainName, envChainId, contract_owner
-//} from '../config.json'
-
 import config from '../config.json'
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
+const tokenSymbol = config['token']['symbol']
+const tokenWatchAssetUrl = config['token']['wallet_watchAsset']['url']
 const nftaddress = config['deployed']['nftaddress']
 const nftmarketaddress = config['deployed']['nftmarketaddress']
 const envChainName = config['deployed']['envChain']['name']
@@ -43,7 +42,7 @@ const Main = () => {
 
   async function loadNfts(nft, market, envChainId) {
     try {
-      await ethAccountsRequest()
+      await _ethAccountsRequest()
       let marketItems = await market.fetchMarketItems()
       marketItems = await Promise.all(marketItems.map(async i => {
         const tokenUri = await nft.tokenURI(i.tokenId)
@@ -52,8 +51,8 @@ const Main = () => {
         let item = {
           tokenId: i.tokenId.toNumber(),
           itemId: i.itemId.toNumber(),
-          symbol: 'FIRE',
-          image: 'https://ipfs.infura.io/ipfs/QmdCRJtV5zppqUD9vFwFwHSru6SSdQokQZZAKabuPTWKxE',
+          symbol: tokenSymbol,
+          image: tokenWatchAssetUrl,
           nftContract: i.nftContract,
           decimals: 0,
           bidPrice,
@@ -68,8 +67,8 @@ const Main = () => {
         let item = {
           tokenId: 0,
           itemId: 0,
-          symbol: 'FIRE',
-          image: 'https://ipfs.infura.io/ipfs/QmdCRJtV5zppqUD9vFwFwHSru6SSdQokQZZAKabuPTWKxE',
+          symbol: tokenSymbol,
+          image: tokenWatchAssetUrl,
           nftContract: 0,
           decimals: 0,
           bidPrice: 1.01,
@@ -146,7 +145,7 @@ const Main = () => {
 
   async function handleWalletRequestPermissions() {
     try {
-      await ethWalletRequestPermissions()
+      await _ethWalletRequestPermissions()
       //do not rethrow because Brave wallet does not yet support wallet_requestPermissions
     } catch(error) {
       updateInfo({message: error.message})
@@ -155,19 +154,61 @@ const Main = () => {
 
   async function handleAccountsRequest() {
     try {
-      await ethAccountsRequest()
+      await _ethAccountsRequest()
     } catch(error) {
       updateInfo({message: error.message})
     }
   }
 
-  async function ethAccountsRequest() {
+  async function handleRegister() {
+    try {
+      await _ethRegister()
+      //do not rethrow because Brave wallet does not yet support wallet_requestPermissions
+    } catch(error) {
+      updateInfo({message: error.message})
+    }
+  }
+
+  async function _ethRegister() {
+    if (window.ethereum) {
+      try {
+        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+        let wasAdded = await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20', // Initially only supports ERC20, but eventually more!
+            options: {
+              address: nftaddress,
+              symbol: tokenSymbol,
+              decimals: 0,
+              image: tokenWatchAssetUrl,
+              abi: NFT.abi
+            }
+          }
+        })
+        if (wasAdded) {
+          updateInfo({message: "Thanks for your interest!"})
+        }
+      } catch(err) {
+        if (err.code === 4001) {
+          // EIP-1193 userRejectedRequest error
+          // If this happens, the user rejected the connection request.
+          updateInfo({message: "Please connect to MetaMask."})
+        } else {
+          updateInfo({message: err.message || err})
+        }
+      }
+    } else {
+      updateInfo({message: "Unable to process without a crypto wallet. Please refresh screen to try again."})
+    }
+  }
+
+  async function _ethAccountsRequest() {
     if (window.ethereum) {
       let result = await Promise.all([
         window.ethereum.request({ method: 'eth_requestAccounts' }),
         window.ethereum.request({ method: 'eth_chainId' })
       ]).catch((error) => {
-        console.error(error)
         if (error.code === 4001) {
           throw {title: 'Error - Please check your wallet and try again', message: 'Connection request has been rejected. '}
         } else if (error.code === -32002) {
@@ -177,7 +218,6 @@ const Main = () => {
         }
       })
       if (result) {
-        console.log(result)
         let [accounts, chainId] = result
         if (accounts.length === 0) {
           throw {title: 'Error - Please check your wallet and try again', message: `MetaMask is locked or the user has not connected any accounts`}
@@ -232,9 +272,9 @@ const Main = () => {
       <Fragment>
         {/* Start agency head section */}
         <Head>
-          <title>SlashFIRE | A react next landing page</title>
+          <title>SlashFIRE</title>
           <meta name="theme-color" content="#10ac84" />
-          <meta name="Description" content="SlashFIRE react next landing page" />
+          <meta name="Description" content="SlashFIRE" />
           {/* Load google fonts */}
           <link
             href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"
@@ -250,7 +290,7 @@ const Main = () => {
         <AgencyWrapper>
           <Sticky top={0} innerZ={9999} activeClass="sticky-nav-active">
             <DrawerProvider>
-              <Navbar handleWalletRequestPermissions={handleWalletRequestPermissions} />
+              <Navbar handleRegister={handleRegister} />
             </DrawerProvider>
           </Sticky>
           <BannerSection handleAccountsRequest={handleAccountsRequest} handleMint={handleMint} />

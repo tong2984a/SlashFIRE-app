@@ -1,128 +1,147 @@
-import React, { useState, useRef } from 'react';
-import Fade from 'react-reveal/Fade';
-import ScrollSpyMenu from 'common/components/ScrollSpyMenu';
-import Scrollspy from 'react-scrollspy';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { Icon } from 'react-icons-kit';
-import { androidMenu } from 'react-icons-kit/ionicons/androidMenu';
-import { androidClose } from 'react-icons-kit/ionicons/androidClose';
-import Link from 'common/components/Link';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import { openModal, closeModal } from '@redq/reuse-modal';
+import NavbarWrapper from 'common/components/Navbar';
+import Drawer from 'common/components/Drawer';
 import Button from 'common/components/Button';
 import Logo from 'common/components/UIElements/Logo';
-import Container from 'common/components/UI/ContainerTwo';
-import NavbarWrapper, {
-  MenuArea,
-  MobileMenu,
-  NavbarRight,
-} from './navbar.style';
-import LogoImage from 'common/assets/image/agencyDigital/logo.png';
+import HamburgMenu from 'common/components/HamburgMenu';
+import ScrollSpyMenu from 'common/components/ScrollSpyMenu';
+import { Container } from './navbar.style';
 
-import { data } from 'common/data/AgencyDigital';
+import LogoImage from 'common/assets/image/agencyDigital/logo-v2.png';
+import BtnImage from 'common/assets/image/agencyDigital/btn-img.png';
 
-const Navbar = () => {
-  const [mobileMenu, setMobileMenu] = useState(false);
+import { DrawerContext } from 'common/contexts/DrawerContext';
 
-  const scrollItems = [];
+import data from 'common/data/Agency/';
 
-  data.navItems.forEach((item) => {
-    scrollItems.push(item.path.slice(1));
-  });
+// Default close button for modal
+const CloseModalButton = () => (
+  <Button
+    className="modalCloseBtn"
+    variant="fab"
+    onClick={() => closeModal()}
+    icon={<i className="flaticon-plus-symbol" />}
+  />
+);
 
-  const handleMobileMenu = () => {
-    setMobileMenu(!mobileMenu);
+// Alt close button for modal
+const CloseModalButtonAlt = () => (
+  <Button
+    className="modalCloseBtn alt"
+    variant="fab"
+    onClick={() => closeModal()}
+    icon={<i className="flaticon-plus-symbol" />}
+  />
+);
+
+const Navbar = ({ navbarStyle, logoStyle, btnStyle, handleWalletRequestPermissions, handleRegister }) => {
+  const { state, dispatch } = useContext(DrawerContext);
+
+  // Search modal handler
+  const handleSearchModal = () => {
+    openModal({
+      config: {
+        className: 'search-modal',
+        disableDragging: true,
+        width: '100%',
+        height: '100%',
+        animationFrom: { transform: 'translateY(100px)' }, // react-spring <Spring from={}> props value
+        animationTo: { transform: 'translateY(0)' }, //  react-spring <Spring to={}> props value
+        transition: {
+          mass: 1,
+          tension: 180,
+          friction: 26,
+        },
+      },
+      component: SearchPanel,
+      componentProps: {},
+      closeComponent: CloseModalButtonAlt,
+      closeOnClickOutside: false,
+    });
   };
 
-  const handleHandleMenuClose = () => {
-    setMobileMenu(false);
+  // Authentication modal handler
+  const handleLoginModal = () => {
+    openModal({
+      config: {
+        className: 'login-modal',
+        disableDragging: true,
+        width: '100%',
+        height: '100%',
+        animationFrom: { transform: 'translateY(100px)' }, // react-spring <Spring from={}> props value
+        animationTo: { transform: 'translateY(0)' }, //  react-spring <Spring to={}> props value
+        transition: {
+          mass: 1,
+          tension: 180,
+          friction: 26,
+        },
+      },
+      component: LoginModal,
+      componentProps: {},
+      closeComponent: CloseModalButton,
+      closeOnClickOutside: false,
+    });
+  };
+
+  // Toggle drawer
+  const toggleHandler = () => {
+    dispatch({
+      type: 'TOGGLE',
+    });
   };
 
   return (
-    <NavbarWrapper className="agencyModern-navbar navbar">
-      <Container>
+    <NavbarWrapper {...navbarStyle}>
+      <Container fullWidth={true}>
         <Logo
-          href="/agencydigital"
+          href="#"
+          title=''
           logoSrc={LogoImage}
-          title="Agency Digital"
-          className="main-logo"
+          logoStyle={logoStyle}
         />
-        {/* end of logo */}
-
-        <MenuArea>
-          <ScrollSpyMenu
-            className="menu-items menu-left"
-            menuItems={data.navItems}
-            offset={-84}
-          />
-          <NavbarRight>
-            <li>
-              <Link href="#">Login</Link>
-            </li>
-            <li>
-              <Link href="#">Get Started</Link>
-            </li>
-          </NavbarRight>
-          {/* end of main menu */}
-
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
-            className="menubar"
-            icon={
-              mobileMenu ? (
-                <Icon
-                  style={{ color: '#02073E' }}
-                  className="bar"
-                  size={32}
-                  icon={androidClose}
-                />
-              ) : (
-                <Fade>
-                  <Icon
-                    style={{ color: '#02073E' }}
-                    className="close"
-                    icon={androidMenu}
-                    size={32}
-                  />
-                </Fade>
-              )
-            }
-            color="#0F2137"
+            className={"dark-red-variant"}
+            iconPosition={"left"}
             variant="textButton"
-            onClick={handleMobileMenu}
+            title={"SlashFIRE"}
+            onClick={handleRegister}
+            {...btnStyle}
           />
-        </MenuArea>
+        </div>
       </Container>
-
-      {/* start mobile menu */}
-      <MobileMenu className={`mobile-menu ${mobileMenu ? 'active' : ''}`}>
-        <Container>
-          <Scrollspy
-            className="menu"
-            items={scrollItems}
-            offset={-84}
-            currentClassName="active"
-          >
-            {data.navItems.map((menu, index) => (
-              <li key={`menu_key${index}`}>
-                <AnchorLink
-                  href={menu.path}
-                  offset={menu.offset}
-                  onClick={handleHandleMenuClose}
-                >
-                  {menu.label}
-                </AnchorLink>
-              </li>
-            ))}
-            <li>
-              <Link href="#">Login</Link>
-            </li>
-            <li>
-              <Link href="#">Get Started</Link>
-            </li>
-          </Scrollspy>
-        </Container>
-      </MobileMenu>
-      {/* end of mobile menu */}
     </NavbarWrapper>
   );
+};
+
+// Navbar style props
+Navbar.propTypes = {
+  navbarStyle: PropTypes.object,
+  logoStyle: PropTypes.object,
+};
+
+Navbar.defaultProps = {
+  // Default navbar style
+  navbarStyle: {
+    minHeight: '70px',
+    backgroundColor: 'rgba(17, 17, 24, 0.57)',
+  },
+  btnStyle: {
+    borderRadius: '18px',
+    border: '1px solid #EA4543',
+    padding: '10px 20px',
+    color: '#EA4543',
+    fontSize: '16px',
+    lineHeight: '24px',
+    fontFamily: 'Poppins'
+  },
+  // Default logo size
+  logoStyle: {
+    width: '160px',
+    height: 'auto',
+  },
 };
 
 export default Navbar;
