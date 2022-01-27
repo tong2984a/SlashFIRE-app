@@ -1,0 +1,12 @@
+Slashfire-buy.mp4
+The following scripts are run as seen in the Slashfire-buy.mp4
+- npx hardhat run scripts/deploy.js --network localhost
+- npx hardhat run scripts/cli_1a_create_nft.js --network localhost
+- npx hardhat run scripts/cli_1b_put_nft_on_market.js --network localhost
+- npx hardhat run scripts/cli_2_fetch_nft.js --network localhost
+
+Slashfire-auction.mp4
+The following scripts are run as seen in the Slashfire-buy.mp4
+- npx hardhat run scripts/deploy.js --network localhost
+- npx hardhat run scripts/cli_1a_create_nft.js --network localhost
+- npx hardhat run scripts/cli_5a_new_auction.js --network localhost
