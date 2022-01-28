@@ -35,7 +35,16 @@ const envChainId = config['deployed']['envChain']['id']
 export const UserContext = createContext()
 
 const Main = () => {
-  const [nfts, setNfts] = useState([])
+  const [nfts, setNfts] = useState([{
+    tokenId: 0,
+    itemId: 0,
+    symbol: tokenSymbol,
+    image: tokenWatchAssetUrl,
+    nftContract: 0,
+    decimals: 0,
+    bidPrice: 1.01,
+    tokenUri: ''
+  }])
   const [address, setAddress] = useState('')
   const [info, updateInfo] = useState({ title: '', message: '' })
   const [contracts, setContracts] = useState([])
