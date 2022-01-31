@@ -69,6 +69,24 @@ const MintWrapper = styled.section`
         backdrop-filter: blur(56.24px);
         border-radius: 12px;
 
+        .container {
+          height: 120px;
+          position: relative;
+          //border: 3px solid green;
+        }
+        .center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          //border: 3px solid green;
+        }
+        .buy_btn {
+          padding: 10px 70px;
+          border-radius: 18px;
+          color: #fff;
+          font-size: 20px;
+        }
+
         .membership_img {
           margin-bottom: 43px;
         }

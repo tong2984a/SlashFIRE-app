@@ -56,26 +56,7 @@ const MintSection = ({
             <Text {...description}  mb="60px" content={info.message}></Text>
             <Box marginRight="auto" marginLeft="auto" width={"80%"}>
               <Box className="row" {...row}>
-                <Box as="article" {...col3} className="col membership_card">
-                  <GlideCarousel
-                    handleRun={handleRun}
-                    nextButton={
-                      <Button
-                        icon={<i className="flaticon-next" />}
-                        aria-label="Next"
-                        variant="textButton"
-                        {...MintSection.defaultProps.glideBtnStyle}
-                      />
-                    }
-                    prevButton={
-                      <Button
-                        icon={<i className="flaticon-left-arrow" />}
-                        aria-label="Prev"
-                        variant="textButton"
-                        {...MintSection.defaultProps.glideBtnStyle}
-                      />
-                    }>
-                  <>
+                <Box as="article" className="membership_card">
                   {nfts.map((nft, i) => (
                     <div key={i}>
                       <Image className="membership_img" src={Coin?.src} alt="membership image"/>
@@ -92,19 +73,17 @@ const MintSection = ({
                           </Box>
                         </Box>
                       </Box>
-                      <Link href="#add_like" className="membership_likes_info">
-                        <Image className="heart-img" src={Heart?.src} alt="heart icon"/>
-                        <Text content="45"></Text>
-                      </Link>
+                      <div class="container">
+                        <div class="center">
+                        <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nfts[currentNftIndex])}>Buy Now</Button>
+                        </div>
+                      </div>
                     </div>
                   ))}
-                  </>
-                  </GlideCarousel>
-                </Box>
-                <Box {...col2} className="col membership_nft-info">
-                  <Heading as="h1" content="Membership NFT"></Heading>
-                  <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
-                  <Button title="Buy Now" {...btnStyle} onClick={() => handleMint(nfts[currentNftIndex])}>Buy Now</Button>
+                  <Box className="col membership_nft-info">
+                    <Heading as="h1" content="Membership NFT"></Heading>
+                    <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
+                  </Box>
                 </Box>
               </Box>
             </Box>
