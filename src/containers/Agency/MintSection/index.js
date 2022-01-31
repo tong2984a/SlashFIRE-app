@@ -73,8 +73,8 @@ const MintSection = ({
                           </Box>
                         </Box>
                       </Box>
-                      <div class="container">
-                        <div class="center">
+                      <div className="container">
+                        <div className="center">
                         <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nfts[currentNftIndex])}>Buy Now</Button>
                         </div>
                       </div>
