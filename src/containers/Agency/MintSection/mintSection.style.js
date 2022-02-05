@@ -44,6 +44,16 @@ const MintWrapper = styled.section`
         @media (min-width: 1024px) {
           padding-left: 120px;
         }
+        @media screen
+          and (max-device-width: 700px) {
+          .div-mobile {    display: block;  }
+          .div-desktop {    display: none;  }
+        }
+        @media screen
+          and (min-device-width: 701px) {
+          .div-mobile {    display: none;  }
+          .div-desktop {    display: block;  }
+        }
         h1 {
           color: #fff;
           font-size: 30px;
@@ -69,6 +79,16 @@ const MintWrapper = styled.section`
         backdrop-filter: blur(56.24px);
         border-radius: 12px;
 
+        @media screen
+          and (max-device-width: 700px) {
+          .div-mobile {    display: block;  }
+          .div-desktop {    display: none;  }
+        }
+        @media screen
+          and (min-device-width: 701px) {
+          .div-mobile {    display: none;  }
+          .div-desktop {    display: block;  }
+        }
         .container {
           height: 120px;
           position: relative;

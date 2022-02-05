@@ -56,7 +56,7 @@ const MintSection = ({
             <Text {...description}  mb="60px" content={info.message}></Text>
             <Box marginRight="auto" marginLeft="auto" width={"80%"}>
               <Box className="row" {...row}>
-                <Box as="article" className="membership_card">
+                <Box as="article" {...col3} className="col membership_card">
                   {nfts.map((nft, i) => (
                     <div key={i}>
                       <Image className="membership_img" src={Coin?.src} alt="membership image"/>
@@ -73,7 +73,7 @@ const MintSection = ({
                           </Box>
                         </Box>
                       </Box>
-                      <div className="container">
+                      <div className="div-mobile container">
                         <div className="center">
                         <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nfts[currentNftIndex])}>Buy Now</Button>
                         </div>
@@ -81,9 +81,18 @@ const MintSection = ({
                     </div>
                   ))}
                   <Box className="col membership_nft-info">
+                    <div className="div-mobile">
+                      <Heading as="h1" content="Membership NFT"></Heading>
+                      <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
+                    </div>
+                  </Box>
+                </Box>
+                <Box {...col2} className="col membership_nft-info">
+                  <div className="div-desktop">
                     <Heading as="h1" content="Membership NFT"></Heading>
                     <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
-                  </Box>
+                    <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nfts[currentNftIndex])}>Buy Now</Button>
+                  </div>
                 </Box>
               </Box>
             </Box>
