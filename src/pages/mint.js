@@ -31,7 +31,7 @@ const tokenSymbol = config['token']['symbol']
 const tokenWatchAssetUrl = config['token']['wallet_watchAsset']['url']
 const tokenURIHash = config['token']['tokenURI.json']['hash']
 const nftaddress = config['deployed']['nftaddress']
-const nftmarketaddress = config['deployed']['nftmarketaddress']
+//const nftmarketaddress = config['deployed']['nftmarketaddress']
 const envChainName = config['deployed']['envChain']['name']
 const envChainId = config['deployed']['envChain']['id']
 export const UserContext = createContext()
@@ -101,8 +101,8 @@ const Main = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const signer = provider.getSigner()
       let nft = new ethers.Contract(nftaddress, NFT.abi, signer)
-      let market = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-      setContracts({nft, market, envChainId})
+      //let market = new ethers.Contract(nftmarketaddress, Market.abi, signer)
+      //setContracts({nft, market, envChainId})
 
       window.ethereum.on('chainChanged', (chainId) => {
         // Handle the new chain.
@@ -111,6 +111,7 @@ const Main = () => {
         window.location.reload();
       })
 
+      /*
       market.on("MarketItemCreated", (itemId, nftContract, tokenId, seller, owner, price) => {
         loadNfts(nft, market, envChainId)
       })
@@ -120,6 +121,8 @@ const Main = () => {
       })
 
       loadNfts(nft, market, envChainId)
+      */
+
     } else {
       updateInfo({title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
     }
@@ -139,7 +142,8 @@ const Main = () => {
         const signer = provider.getSigner()
         let tokenURIHash = config['token']['tokenURI.json']['hash']
         let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-        let transaction = await nftContract.createToken(tokenURIHash)
+        let price = ethers.utils.parseUnits("0.25", "ether")
+        let transaction = await nftContract.createToken(tokenURIHash, {value: price})
 
         let tx = await transaction.wait()
         updateInfo({message: ''})
