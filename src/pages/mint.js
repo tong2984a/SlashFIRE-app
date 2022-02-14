@@ -142,7 +142,8 @@ const Main = () => {
         const signer = provider.getSigner()
         let tokenURIHash = config['token']['tokenURI.json']['hash']
         let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-        let price = ethers.utils.parseUnits("0.25", "ether")
+        let price = await nftContract.getListingPrice()
+        //let price = ethers.utils.parseUnits("0.25", "ether")
         let transaction = await nftContract.createToken(tokenURIHash, {value: price})
 
         let tx = await transaction.wait()
