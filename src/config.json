@@ -66,10 +66,10 @@
         }
     },
     "deployed": {
-        "nftaddress": "0x1E271a4E3304236754609C788F1b395319729e77",
+        "nftaddress": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
         "envChain": {
-            "name": "rinkeby",
-            "id": "0x4"
+            "name": "localhost",
+            "id": "0x7a69"
         },
         "contract_owner": ""
     }

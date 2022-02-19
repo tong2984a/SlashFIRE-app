@@ -37,94 +37,35 @@ const envChainId = config['deployed']['envChain']['id']
 export const UserContext = createContext()
 
 const Main = () => {
-  const [nfts, setNfts] = useState([{
+  const [nft, setNft] = useState({
     tokenId: 0,
     itemId: 0,
     symbol: tokenSymbol,
     image: tokenWatchAssetUrl,
     nftContract: 0,
     decimals: 0,
-    bidPrice: 1.01,
+    bidPrice: '',
     tokenUri: ''
-  }])
+  })
   const [address, setAddress] = useState('')
-  const [info, updateInfo] = useState({ title: '', message: '' })
+  const [info, updateInfo] = useState({ title: '', message: '', error: false })
+  const [error, updateError] = useState({ title: '', message: '' })
   const [contracts, setContracts] = useState([])
 
-  async function loadNfts(nft, market, envChainId) {
-    try {
-      await _ethAccountsRequest()
-      let marketItems = await market.fetchMarketItems()
-      marketItems = await Promise.all(marketItems.map(async i => {
-        const tokenUri = await nft.tokenURI(i.tokenId)
-        const bidPrice = Number(ethers.utils.formatEther( i.price ))
-        // auctionAmount = Math.max(1, auctionAmount)
-        let item = {
-          tokenId: i.tokenId.toNumber(),
-          itemId: i.itemId.toNumber(),
-          symbol: tokenSymbol,
-          image: tokenWatchAssetUrl,
-          nftContract: i.nftContract,
-          decimals: 0,
-          bidPrice,
-          tokenUri: tokenUri || ''
-        }
-        return item
-      }))
-
-      if (marketItems.length > 0) {
-        setNfts(marketItems)
-      } else {
-        let item = {
-          tokenId: 0,
-          itemId: 0,
-          symbol: tokenSymbol,
-          image: tokenWatchAssetUrl,
-          nftContract: 0,
-          decimals: 0,
-          bidPrice: 1.01,
-          tokenUri: ''
-        }
-        setNfts([item])
-      }
-    } catch (error) {
-      if (error.data) {
-        updateInfo({message: `Crypto Wallet Error: ${error.data.message}`})
-      } else {
-        updateInfo({message: `Crypto Wallet Error: ${error.message || error}`})
-      }
-    }
-  }
-
   useEffect(() => {
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
-      let nft = new ethers.Contract(nftaddress, NFT.abi, signer)
-      //let market = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-      //setContracts({nft, market, envChainId})
+    if (window.ethereum) { //any provider?
+      handleAccountsRequest() //any signer account?
 
       window.ethereum.on('chainChanged', (chainId) => {
         // Handle the new chain.
-        // Correctly handling chain changes can be complicated.
-        // We recommend reloading the page unless you have good reason not to.
-        window.location.reload();
+        if (chainId === envChainId) {
+          updateInfo({error: false, title: '', message: ''})
+        } else {
+          updateInfo({error: true, title: 'Error - Please check your wallet and try again', message: `Error - Is your wallet connected to ${envChainName}?`})
+        }
       })
-
-      /*
-      market.on("MarketItemCreated", (itemId, nftContract, tokenId, seller, owner, price) => {
-        loadNfts(nft, market, envChainId)
-      })
-
-      market.on("MarketItemSold", (itemId, nftContract, tokenId, owner, seller, price) => {
-        loadNfts(nft, market, envChainId)
-      })
-
-      loadNfts(nft, market, envChainId)
-      */
-
     } else {
-      updateInfo({title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
+      updateInfo({error: true, title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
     }
     return function cleanup() {
       //mounted = false
@@ -143,7 +84,6 @@ const Main = () => {
         let tokenURIHash = config['token']['tokenURI.json']['hash']
         let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
         let price = await nftContract.getListingPrice()
-        //let price = ethers.utils.parseUnits("0.25", "ether")
         let transaction = await nftContract.createToken(tokenURIHash, {value: price})
 
         let tx = await transaction.wait()
@@ -160,63 +100,27 @@ const Main = () => {
     }
   }
 
-  async function handleWalletRequestPermissions() {
-    try {
-      await _ethWalletRequestPermissions()
-      //do not rethrow because Brave wallet does not yet support wallet_requestPermissions
-    } catch(error) {
-      updateInfo({message: error.message})
-    }
-  }
-
   async function handleAccountsRequest() {
     try {
+      updateInfo({error: true, title: 'Connecting to your MetaMask wallet...', message: 'Please wait.'})
       await _ethAccountsRequest()
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner()
+      let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+      let bidPrice = await nftContract.getListingPrice()
+      setNft({
+        tokenId: 0,
+        itemId: 0,
+        symbol: tokenSymbol,
+        image: tokenWatchAssetUrl,
+        nftContract: 0,
+        decimals: 0,
+        bidPrice: parseInt(bidPrice) / 10**18,
+        tokenUri: ''
+      })
+      updateInfo({error: false, title: 'Metamask wallet adapter is connected and ready to use.', message: ''})
     } catch(error) {
-      updateInfo({message: error.message})
-    }
-  }
-
-  async function handleRegister() {
-    try {
-      await _ethRegister()
-      //do not rethrow because Brave wallet does not yet support wallet_requestPermissions
-    } catch(error) {
-      updateInfo({message: error.message})
-    }
-  }
-
-  async function _ethRegister() {
-    if (window.ethereum) {
-      try {
-        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-        let wasAdded = await window.ethereum.request({
-          method: 'wallet_watchAsset',
-          params: {
-            type: 'ERC20', // Initially only supports ERC20, but eventually more!
-            options: {
-              address: nftaddress,
-              symbol: tokenSymbol,
-              decimals: 0,
-              image: tokenWatchAssetUrl,
-              abi: NFT.abi
-            }
-          }
-        })
-        if (wasAdded) {
-          updateInfo({message: "Thanks for your interest!"})
-        }
-      } catch(err) {
-        if (err.code === 4001) {
-          // EIP-1193 userRejectedRequest error
-          // If this happens, the user rejected the connection request.
-          updateInfo({message: "Please connect to MetaMask."})
-        } else {
-          updateInfo({message: err.message || err})
-        }
-      }
-    } else {
-      updateInfo({message: "Unable to process without a crypto wallet. Please refresh screen to try again."})
+      updateInfo({error: true, title: error.title, message: error.message})
     }
   }
 
@@ -250,41 +154,8 @@ const Main = () => {
     }
   }
 
-  async function ethWalletRequestPermissions() {
-    if (window.ethereum) {
-      try {
-        let permissions = await window.ethereum.request({
-          method: "wallet_requestPermissions",
-          params: [
-            {
-              eth_accounts: {}
-            }
-          ]
-        })
-        const accountsPermission = permissions.find(
-          (permission) => permission.parentCapability === 'eth_accounts'
-        )
-        if (accountsPermission) {
-          updateInfo({message: 'eth_accounts permission successfully requested!'})
-        }
-      } catch(error) {
-        if (error.code === 4001) {
-          throw {title: 'Error - Please check your wallet and try again', message: 'Connection request has been rejected. '}
-        } else if (error.code === -32601) {
-          throw {title: 'Error - Please check your wallet and try again', message: 'Permissions needed to continue.'}
-        } else if (error.code === -32002) {
-          throw {title: 'Error - Please check your wallet and try again', message: error.message}
-        } else {
-          throw {title: 'Error - Please check your wallet and try again', message: error.message}
-        }
-      }
-    } else {
-      throw {title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'}
-    }
-  }
-
   return (
-    <UserContext.Provider value={{contractsState:[contracts, setContracts], infoState: [info, updateInfo], nftsState: [nfts, setNfts], addressState: [address, setAddress]}}>
+    <UserContext.Provider value={{contractsState:[contracts, setContracts], infoState: [info, updateInfo], nftState: [nft, setNft], addressState: [address, setAddress]}}>
     <ThemeProvider theme={agencyTheme}>
       <AgencyWrapper>
         <MintSection handleAccountsRequest={handleAccountsRequest} handleMint={handleMint} />
