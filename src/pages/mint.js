@@ -48,24 +48,23 @@ const Main = () => {
     tokenUri: ''
   })
   const [address, setAddress] = useState('')
-  const [info, updateInfo] = useState({ title: '', message: '', error: false })
-  const [error, updateError] = useState({ title: '', message: '' })
+  const [info, updateInfo] = useState({ title: '', message: '' })
   const [contracts, setContracts] = useState([])
 
   useEffect(() => {
     if (window.ethereum) { //any provider?
-      handleAccountsRequest() //any signer account?
+      handleAccountsRequest() //display price
 
       window.ethereum.on('chainChanged', (chainId) => {
         // Handle the new chain.
         if (chainId === envChainId) {
-          updateInfo({error: false, title: '', message: ''})
+          handleAccountsRequest() //display price
         } else {
-          updateInfo({error: true, title: 'Error - Please check your wallet and try again', message: `Error - Is your wallet connected to ${envChainName}?`})
+          updateInfo({title: 'Error - Please check your wallet and try again', message: `Error - Is your wallet connected to ${envChainName}?`})
         }
       })
     } else {
-      updateInfo({error: true, title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
+      updateInfo({title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
     }
     return function cleanup() {
       //mounted = false
@@ -73,12 +72,10 @@ const Main = () => {
   }, [])
 
   async function handleMint(nft) {
-    if (!nft || nft.tokenId === '-') {
-      return updateInfo({message: "Unable to connect to network. Please check MetaMask and try again."})
-    }
-    if (window.ethereum) {
-      updateInfo({message: "Please wait. Smart contract is processing."})
+    if (window.ethereum) { //any provider?
+      updateInfo({title: 'Connecting to your MetaMask wallet...', message: 'Please wait.'})
       try {
+        await _ethAccountsRequest()  //any signer account?
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
         let tokenURIHash = config['token']['tokenURI.json']['hash']
@@ -87,12 +84,12 @@ const Main = () => {
         let transaction = await nftContract.createToken(tokenURIHash, {value: price})
 
         let tx = await transaction.wait()
-        updateInfo({message: ''})
+        updateInfo({title: '', message: ''})
       } catch (error) {
         if (error.data) {
-          updateInfo({message:`Crypto Wallet Error: ${error.data.message}`})
+          updateInfo({title:`Crypto Wallet Error:`, message:`${error.data.message}`})
         } else {
-          updateInfo({message:`Crypto Wallet Error: ${error.message || error}`})
+          updateInfo({title:`Crypto Wallet Error:`, message:`${error.message || error}`})
         }
       }
     } else {
@@ -102,8 +99,8 @@ const Main = () => {
 
   async function handleAccountsRequest() {
     try {
-      updateInfo({error: true, title: 'Connecting to your MetaMask wallet...', message: 'Please wait.'})
-      await _ethAccountsRequest()
+      updateInfo({title: 'Connecting to your MetaMask wallet...', message: 'Please wait.'})
+      await _ethAccountsRequest()  //any signer account?
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const signer = provider.getSigner()
       let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
@@ -118,9 +115,9 @@ const Main = () => {
         bidPrice: parseInt(bidPrice) / 10**18,
         tokenUri: ''
       })
-      updateInfo({error: false, title: 'Metamask wallet adapter is connected and ready to use.', message: ''})
+      updateInfo({title: 'Metamask wallet adapter is connected and ready to use.', message: ''})
     } catch(error) {
-      updateInfo({error: true, title: error.title, message: error.message})
+      updateInfo({title: error.title, message: error.message})
     }
   }
 
@@ -147,7 +144,7 @@ const Main = () => {
           throw {title: 'Error - Please check your wallet and try again', message: `Error - Is your wallet connected to ${envChainName}?`}
         }
         setAddress(accounts[0])
-        updateInfo({message: "Metamask wallet adapter is connected and ready to use."})
+        updateInfo({title: '', message: "Metamask wallet adapter is connected and ready to use."})
       }
     } else {
       throw {title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'}

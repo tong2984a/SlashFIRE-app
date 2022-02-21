@@ -57,7 +57,6 @@ const MintSection = ({
                       <Box className="membership_info">
                         <Box className="membership_header">
                           <Heading as="h2" content={nft.symbol}></Heading>
-                          <Text content={`No. ${nft.itemId}`}></Text>
                         </Box>
                         <Box className="membership_price_header">
                           <Heading as="h2" content="Price"></Heading>
@@ -69,35 +68,23 @@ const MintSection = ({
                       </Box>
                       <div className="div-mobile container">
                         <div className="center">
-                        {
-                          info.error || <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nft)}>Buy Now</Button>
-                        }
+                          <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nft)}>Buy Now</Button>
                         </div>
                       </div>
                     </div>
                   <Box className="col membership_nft-info">
-                  {
-                    info.error ||
-                    (
-                      <div className="div-mobile">
-                        <Heading as="h1" content="Membership NFT"></Heading>
-                        <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
-                      </div>
-                    )
-                  }
+                    <div className="div-mobile">
+                      <Heading as="h1" content="Membership NFT"></Heading>
+                      <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
+                    </div>
                   </Box>
                 </Box>
                 <Box {...col2} className="col membership_nft-info">
-                {
-                  info.error ||
-                  (
-                    <div className="div-desktop">
-                      <Heading as="h1" content="Membership NFT"></Heading>
-                      <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
-                      <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nft)}>Buy Now</Button>
-                    </div>
-                  )
-                }
+                  <div className="div-desktop">
+                    <Heading as="h1" content="Membership NFT"></Heading>
+                    <Text content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem "></Text>
+                    <Button className="buy_btn" title="Buy Now" {...btnStyle} onClick={() => handleMint(nft)}>Buy Now</Button>
+                  </div>
                 </Box>
               </Box>
             </Box>
