@@ -51,7 +51,34 @@ const Main = () => {
   const [info, updateInfo] = useState({ title: '', message: '' })
   const [contracts, setContracts] = useState([])
 
+  function test() {
+    var myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkpXVFNpZ25pbmdDZXJ0LTIwMjAtTExFIiwicGkuYXRtIjoiNyJ9.eyJzY29wZSI6WyJjYWRhOmFkZHVzZXIiLCJjYWRhOmFkZHN1ZG9lciIsImNhZGE6YWRkcG9saWN5Z3JvdXAiLCJjYWRhOmFkZGhvc3QiLCJjYWRhOmFkZHVuaXhncm91cCIsImNhZGE6YWRkaG9zdGdyb3VwIiwiY2FkYTphZGRzdWRvdGVtcGxhdGUiLCJjYWRhOmNsb25laG9zdCIsImNhZGE6Y2xvbmV1c2VyIiwiY2FkYTphZGR1c2VyZ3JvdXAiLCJjYWRhOmRlbGV0ZWhvc3QiLCJjYWRhOmRlbGV0ZWhvc3Rncm91cCIsImNhZGE6ZGVsZXRlcG9saWN5Z3JvdXAiLCJjYWRhOmRlbGV0ZXN1ZG9lciIsImNhZGE6ZGVsZXRlc3Vkb3RlbXBsYXRlIiwiY2FkYTpkZWxldGV1bml4Z3JvdXAiLCJjYWRhOmRlbGV0ZXVzZXIiLCJjYWRhOmRlbGV0ZXVzZXJncm91cCIsImNhZGE6ZWRpdGhvc3QiLCJjYWRhOmVkaXRob3N0Z3JvdXAiLCJjYWRhOmVkaXRwb2xpY3lncm91cCIsImNhZGE6ZWRpdHN1ZG9lciIsImNhZGE6ZWRpdHN1ZG90ZW1wbGF0ZSIsImNhZGE6ZWRpdHVuaXhncm91cCIsImNhZGE6ZWRpdHVzZXIiLCJjYWRhOmVkaXR1c2VyZ3JvdXAiLCJjYWRhOmtyYnN1cHBvcnR1c2VyIiwiY2FkYTptYW5hZ2VwZXJtaXNzaW9ucyIsImNhZGE6cnNhc3VwcG9ydHVzZXIiLCJjYWRhOnZpZXdob3N0Z3JvdXAiLCJjYWRhOnZpZXdob3N0IiwiY2FkYTp2aWV3cG9saWN5Z3JvdXAiLCJjYWRhOnZpZXdzdWRvZXIiLCJjYWRhOnZpZXdzdWRvdGVtcGxhdGUiLCJjYWRhOnZpZXd1bml4Z3JvdXAiLCJjYWRhOnZpZXd1c2VyIiwiY2FkYTp2aWV3dXNlcmdyb3VwIl0sImNsaWVudF9pZCI6InNyYXZpMDA4Y19kZXZ0ZXN0IiwiaXNzIjoiaHR0cHM6Ly93ZWJzZWMtZGV2LmNhYmxlLmNvbWNhc3QuY29tIiwiZXhwIjoxNjIwNjY3Njk2fQ.JAdt8wcjpdZeTQEd_BI6-hn1RPeiycjcm4_AMsfeXsLEnnj30WCU-fdVxRCRFXuuD3WbulveCbupTeoBHwT1FSaZO6QY3kN2smr00vPgND-Ng82v8Mu9r_YJEJ14YbFq-WvU_U-OWYVzB2vtz8LoI9-BtMOKz4YRQCcgM5TBJpLjK2dXdtP5r1mui4ZMZmiQQiD90Sac9lUWeymrSH08wZKnLj7a5KD1DgPNNYJVkk8zMjF7MsLJ60cVQvG2EDH_DnqVZzbdmW1rHrf6BrJypJfiSO7ONZWbWPNNJiTJJRrUr4mniEMH-zAIkyvLoVV__OwC4fO2OVZOZiYjLm503A");
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "XSRF-TOKEN=1646044811|Cnc9rQDPbaXo");
+
+  var raw = JSON.stringify({
+    "name": "FIRE",
+    "price": 0.371,
+    "identity": "admin"
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  fetch("https://slashfire.io/_functions/nft", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+
+}
+
   useEffect(() => {
+    test()
     if (window.ethereum) { //any provider?
       handleAccountsRequest() //display price
 
