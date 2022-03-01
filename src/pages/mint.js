@@ -90,6 +90,7 @@ const Main = () => {
         }
       })
     } else {
+      getPriceFromAPI()
       updateInfo({title: 'Error - Non-Ethereum browser detected.', message: 'You should consider installing MetaMask'})
     }
     return function cleanup() {
