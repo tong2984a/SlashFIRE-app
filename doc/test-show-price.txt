@@ -1,0 +1,61 @@
+Test 1: Cannot read contract (e.g. MetaMask is defaulted to a incorrect network)
+- should show price from config.json initially
+- should continue to show price from config.json because API is not available
+
+
+
+
+Test 2: Cannot read contract (e.g. MetaMask is defaulted to a incorrect network)
+- should show price from config.json initially
+- should refresh to show price from API (i.e. API is available)
+
+
+
+
+Test 3: Can read contract (i.e. MetaMask is defaulted to a correct network)
+- should show price from contract
+
+
+
+
+Test 1b: Switch to a correct network
+- should show price from contract
+
+
+
+
+Test 2b: Switch to a correct network
+- should show price from contract
+
+
+
+
+Test 3b: Switch to an incorrect network
+- should show price from config.json initially
+- should continue to show price from config.json because API is not available
+
+
+
+
+Test 3c: Switch to an incorrect network
+- should show price from config.json initially
+- should refresh to show price from API (i.e. API is available)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

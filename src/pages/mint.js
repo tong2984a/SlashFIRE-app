@@ -28,6 +28,7 @@ import config from '../config.json'
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
 const tokenSymbol = config['token']['symbol']
+const tokenPrice = config['token']['price']
 const tokenWatchAssetUrl = config['token']['wallet_watchAsset']['url']
 const tokenURIHash = config['token']['tokenURI.json']['hash']
 const nftaddress = config['deployed']['nftaddress']
@@ -44,48 +45,46 @@ const Main = () => {
     image: tokenWatchAssetUrl,
     nftContract: 0,
     decimals: 0,
-    bidPrice: '',
+    bidPrice: tokenPrice,
     tokenUri: ''
   })
   const [address, setAddress] = useState('')
   const [info, updateInfo] = useState({ title: '', message: '' })
   const [contracts, setContracts] = useState([])
 
-  function test() {
-    var myHeaders = new Headers();
-  myHeaders.append("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkpXVFNpZ25pbmdDZXJ0LTIwMjAtTExFIiwicGkuYXRtIjoiNyJ9.eyJzY29wZSI6WyJjYWRhOmFkZHVzZXIiLCJjYWRhOmFkZHN1ZG9lciIsImNhZGE6YWRkcG9saWN5Z3JvdXAiLCJjYWRhOmFkZGhvc3QiLCJjYWRhOmFkZHVuaXhncm91cCIsImNhZGE6YWRkaG9zdGdyb3VwIiwiY2FkYTphZGRzdWRvdGVtcGxhdGUiLCJjYWRhOmNsb25laG9zdCIsImNhZGE6Y2xvbmV1c2VyIiwiY2FkYTphZGR1c2VyZ3JvdXAiLCJjYWRhOmRlbGV0ZWhvc3QiLCJjYWRhOmRlbGV0ZWhvc3Rncm91cCIsImNhZGE6ZGVsZXRlcG9saWN5Z3JvdXAiLCJjYWRhOmRlbGV0ZXN1ZG9lciIsImNhZGE6ZGVsZXRlc3Vkb3RlbXBsYXRlIiwiY2FkYTpkZWxldGV1bml4Z3JvdXAiLCJjYWRhOmRlbGV0ZXVzZXIiLCJjYWRhOmRlbGV0ZXVzZXJncm91cCIsImNhZGE6ZWRpdGhvc3QiLCJjYWRhOmVkaXRob3N0Z3JvdXAiLCJjYWRhOmVkaXRwb2xpY3lncm91cCIsImNhZGE6ZWRpdHN1ZG9lciIsImNhZGE6ZWRpdHN1ZG90ZW1wbGF0ZSIsImNhZGE6ZWRpdHVuaXhncm91cCIsImNhZGE6ZWRpdHVzZXIiLCJjYWRhOmVkaXR1c2VyZ3JvdXAiLCJjYWRhOmtyYnN1cHBvcnR1c2VyIiwiY2FkYTptYW5hZ2VwZXJtaXNzaW9ucyIsImNhZGE6cnNhc3VwcG9ydHVzZXIiLCJjYWRhOnZpZXdob3N0Z3JvdXAiLCJjYWRhOnZpZXdob3N0IiwiY2FkYTp2aWV3cG9saWN5Z3JvdXAiLCJjYWRhOnZpZXdzdWRvZXIiLCJjYWRhOnZpZXdzdWRvdGVtcGxhdGUiLCJjYWRhOnZpZXd1bml4Z3JvdXAiLCJjYWRhOnZpZXd1c2VyIiwiY2FkYTp2aWV3dXNlcmdyb3VwIl0sImNsaWVudF9pZCI6InNyYXZpMDA4Y19kZXZ0ZXN0IiwiaXNzIjoiaHR0cHM6Ly93ZWJzZWMtZGV2LmNhYmxlLmNvbWNhc3QuY29tIiwiZXhwIjoxNjIwNjY3Njk2fQ.JAdt8wcjpdZeTQEd_BI6-hn1RPeiycjcm4_AMsfeXsLEnnj30WCU-fdVxRCRFXuuD3WbulveCbupTeoBHwT1FSaZO6QY3kN2smr00vPgND-Ng82v8Mu9r_YJEJ14YbFq-WvU_U-OWYVzB2vtz8LoI9-BtMOKz4YRQCcgM5TBJpLjK2dXdtP5r1mui4ZMZmiQQiD90Sac9lUWeymrSH08wZKnLj7a5KD1DgPNNYJVkk8zMjF7MsLJ60cVQvG2EDH_DnqVZzbdmW1rHrf6BrJypJfiSO7ONZWbWPNNJiTJJRrUr4mniEMH-zAIkyvLoVV__OwC4fO2OVZOZiYjLm503A");
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "XSRF-TOKEN=1646044811|Cnc9rQDPbaXo");
+  async function getPriceFromAPI() {
+    let new_price = tokenPrice
+    try {
+      const response = await fetch('https://slashfire.io/_functions/nft', {
+          method: 'GET'
+      })
+      const response_data = await response.json()
 
-  var raw = JSON.stringify({
-    "name": "FIRE",
-    "price": 0.371,
-    "identity": "admin"
-  });
-
-  var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  };
-
-  fetch("https://slashfire.io/_functions/nft", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-
-}
+      new_price = response_data.nft[0].price
+      console.log('Success:', response_data)
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status}`
+        console.error('Error:', message)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+    setNft(prevState => ({
+      ...prevState,
+      bidPrice: new_price
+    }))
+    return new_price
+  }
 
   useEffect(() => {
-    test()
     if (window.ethereum) { //any provider?
       handleAccountsRequest() //display price
 
       window.ethereum.on('chainChanged', (chainId) => {
         // Handle the new chain.
+        handleAccountsRequest() //display price
         if (chainId === envChainId) {
-          handleAccountsRequest() //display price
+          //handleAccountsRequest() //display price
         } else {
           updateInfo({title: 'Error - Please check your wallet and try again', message: `Error - Is your wallet connected to ${envChainName}?`})
         }
@@ -102,14 +101,8 @@ const Main = () => {
     if (window.ethereum) { //any provider?
       updateInfo({title: 'Connecting to your MetaMask wallet...', message: 'Please wait.'})
       try {
-        await _ethAccountsRequest()  //any signer account?
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const signer = provider.getSigner()
-        let tokenURIHash = config['token']['tokenURI.json']['hash']
-        let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-        let price = await nftContract.getListingPrice()
-        let transaction = await nftContract.createToken(tokenURIHash, {value: price})
-
+        let bidPrice = await getPriceFromContract()
+        let transaction = await nftContract.createToken(tokenURIHash, {value: bidPrice})
         let tx = await transaction.wait()
         updateInfo({title: '', message: ''})
       } catch (error) {
@@ -124,26 +117,26 @@ const Main = () => {
     }
   }
 
+  async function getPriceFromContract() {
+    await _ethAccountsRequest()  //any signer account?
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+    let bidPrice = await nftContract.getListingPrice()
+    setNft(prevState => ({
+      ...prevState,
+      bidPrice: parseInt(bidPrice) / 10**18,
+    }))
+    return bidPrice
+  }
+
   async function handleAccountsRequest() {
     try {
       updateInfo({title: 'Connecting to your MetaMask wallet...', message: 'Please wait.'})
-      await _ethAccountsRequest()  //any signer account?
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
-      let nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      let bidPrice = await nftContract.getListingPrice()
-      setNft({
-        tokenId: 0,
-        itemId: 0,
-        symbol: tokenSymbol,
-        image: tokenWatchAssetUrl,
-        nftContract: 0,
-        decimals: 0,
-        bidPrice: parseInt(bidPrice) / 10**18,
-        tokenUri: ''
-      })
+      await getPriceFromContract()
       updateInfo({title: 'Metamask wallet adapter is connected and ready to use.', message: ''})
     } catch(error) {
+      await getPriceFromAPI()
       updateInfo({title: error.title, message: error.message})
     }
   }
