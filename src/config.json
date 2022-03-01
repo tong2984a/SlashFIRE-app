@@ -2,7 +2,7 @@
     "token": {
         "symbol": "FIRE",
         "name": "SlashFIRE",
-        "price": "0.00001",
+        "price": "0.25",
         "wallet_watchAsset": {
             "image": "https://ipfs.infura.io/ipfs/QmSeVUE9oHCuiszAUgfP9XNXtdZhxa2J827HDAyZDxUupe"
         },
